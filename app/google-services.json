@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "610062206244",
+    "project_id": "taller03-ca453",
+    "storage_bucket": "taller03-ca453.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:610062206244:android:147b832685f3a30d89dfb1",
+        "android_client_info": {
+          "package_name": "com.lauovalle.taller_03_lauraovalle"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyChF3omaMy18K04y_5BHBYLw4idUyXn3BI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
