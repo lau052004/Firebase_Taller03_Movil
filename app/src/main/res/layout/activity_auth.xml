@@ -20,6 +20,29 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+        <ImageView
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:src="@color/material_dynamic_neutral95"
+            android:layout_gravity="center"
+            />
+
+        <EditText
+            android:id="@+id/Name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Nombre"
+            android:inputType="text" />
+
+        <EditText
+            android:id="@+id/LastName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Apellido"
+            android:inputType="text" />
+
         <EditText
             android:id="@+id/EmailAddress"
             android:layout_width="match_parent"
@@ -34,6 +57,22 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="Contraseña"
+            android:inputType="textPassword" />
+
+        <EditText
+            android:id="@+id/Phone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Celular"
+            android:inputType="phone" />
+
+        <EditText
+            android:id="@+id/Identification"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Nro. Identificación"
             android:inputType="textPassword" />
 
         <LinearLayout

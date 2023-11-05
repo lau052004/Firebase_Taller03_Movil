@@ -63,4 +63,8 @@ dependencies {
     // Add the dependencies for any other desired Firebase products
     implementation("com.firebaseui:firebase-ui-auth:7.2.0")
     // https://firebase.google.com/docs/android/setup#available-libraries
+
+    // Add the dependency for the Realtime Database library
+    // When using the BoM, you don't specify versions in Firebase library dependencies
+    implementation("com.google.firebase:firebase-database-ktx")
 }
