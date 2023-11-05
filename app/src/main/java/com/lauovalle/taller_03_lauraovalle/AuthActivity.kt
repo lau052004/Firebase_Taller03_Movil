@@ -1,21 +1,84 @@
 package com.lauovalle.taller_03_lauraovalle
 
+import android.content.ActivityNotFoundException
+import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Environment
+import android.provider.MediaStore
 import android.view.View
+import android.widget.ImageView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.ktx.storage
+import com.lauovalle.taller_03_lauraovalle.FirebaseModel.Model
 import com.lauovalle.taller_03_lauraovalle.FirebaseModel.User
 import com.lauovalle.taller_03_lauraovalle.databinding.ActivityAuthBinding
+import java.io.File
+import java.io.IOException
+import java.text.DateFormat
+import java.util.Date
+import java.util.logging.Logger
 
 class AuthActivity : AppCompatActivity() {
     lateinit var binding: ActivityAuthBinding
+
+    // Database
     private lateinit var dbRef: DatabaseReference
     lateinit var user: User
+
+    // Storage
+    private var firebaseStorage: FirebaseStorage? = null
+
+    companion object {
+        val TAG: String = AuthActivity::class.java.name
+    }
+
+    private val logger = Logger.getLogger(TAG)
+
+    // Permission handler
+    private val getSimplePermission = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()) {
+        updateUI(it)
+    }
+
+    var pictureImagePath: Uri? = null
+
+    // Create ActivityResultLauncher instances
+    private val cameraActivityResultLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == RESULT_OK) {
+            // Handle camera result
+            binding.ProfilePhoto!!.setImageURI(pictureImagePath)
+            binding.ProfilePhoto!!.scaleType = ImageView.ScaleType.FIT_CENTER
+            binding.ProfilePhoto!!.adjustViewBounds = true
+            logger.info("Image capture successfully.")
+        } else {
+            logger.warning("Image capture failed.")
+        }
+    }
+
+    val pickMedia = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == RESULT_OK) {
+            val data: Intent? = result.data
+            pictureImagePath = data?.data
+
+            binding.ProfilePhoto.setImageURI(pictureImagePath)
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -25,8 +88,9 @@ class AuthActivity : AppCompatActivity() {
         val view: View = binding.root
         setContentView(view)
 
-        // --------------------- DAATA BASE REFERENCE
+        // --------------------- DATA BASE REFERENCE
         dbRef = FirebaseDatabase.getInstance().getReference("Usuarios")
+        firebaseStorage = FirebaseStorage.getInstance()
 
         setup()
     }
@@ -34,6 +98,22 @@ class AuthActivity : AppCompatActivity() {
     private fun setup() {
         title = "Atenticación"
 
+        // ----------------------- CARGAR FOTO
+        // Pick Image from gallery
+        binding.galleryBtn.setOnClickListener{
+            val pickImageIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+            pickMedia.launch(pickImageIntent)
+        }
+
+
+        // Take photo
+        binding.cameraBtn.setOnClickListener {
+            // Pedir el permiso cuando la aplicación inicie
+            logger.info("Se va a solicitar el permiso")
+            verifyPermissions(this, android.Manifest.permission.CAMERA, "El permiso es requerido para...")
+        }
+
+        // ----------------------- REGISTRARSE
         binding.SingUpBtn.setOnClickListener{
             if(binding.EmailAddress.text.isNotEmpty() && binding.Password.text.isNotEmpty())
             {
@@ -54,6 +134,7 @@ class AuthActivity : AppCompatActivity() {
         }
 
 
+        // ------------------------- INICIAR SESIÓN
         binding.LogInBtn.setOnClickListener{
             if(binding.EmailAddress.text.isNotEmpty() && binding.Password.text.isNotEmpty())
             {
@@ -93,8 +174,89 @@ class AuthActivity : AppCompatActivity() {
                 Toast.makeText(this,"Error: ${err.message}", Toast.LENGTH_LONG).show()
             }
 
+            // Guardar la foto en storage
+            val reference = firebaseStorage!!.reference.child("Images").child("${userId}")
+            reference.putFile(pictureImagePath!!).addOnSuccessListener {
+                reference.downloadUrl.addOnSuccessListener {uri ->
+                    val model = Model()
+                    model.image = pictureImagePath.toString()
+                    dbRef.child("Imagenes").push().setValue(model).addOnSuccessListener {
+                        finish()
+                    }.addOnFailureListener{
+                        Toast.makeText(this, "Error al subir la imagen", Toast.LENGTH_LONG).show()
+                    }
+                }
+            }
+
             TODO("Incluir la latitud y la longitud")
         }
+    }
+
+    private fun verifyPermissions(context: Context, permission: String, rationale: String) {
+        when {
+            ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED -> {
+                Snackbar.make(binding.root, "Ya tengo los permisos 😜", Snackbar.LENGTH_LONG).show()
+                updateUI(true)
+            }
+            shouldShowRequestPermissionRationale(permission) -> {
+                // We display a snackbar with the justification for the permission, and once it disappears, we request it again.
+                val snackbar = Snackbar.make(binding.root, rationale, Snackbar.LENGTH_LONG)
+                snackbar.addCallback(object : Snackbar.Callback() {
+                    override fun onDismissed(snackbar: Snackbar, event: Int) {
+                        if (event == DISMISS_EVENT_TIMEOUT) {
+                            getSimplePermission.launch(permission)
+                        }
+                    }
+                })
+                snackbar.show()
+            }
+            else -> {
+                getSimplePermission.launch(permission)
+            }
+        }
+    }
+
+
+
+    private fun updateUI(permission: Boolean) {
+        if(permission){
+            //granted
+            dipatchTakePictureIntent()
+        }else{
+            logger.warning("Permission denied")
+        }
+    }
+
+    fun dipatchTakePictureIntent() {
+        val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        // Crear el archivo donde debería ir la foto
+        var imageFile: File? = null
+        try {
+            imageFile = createImageFile()
+        } catch (ex: IOException) {
+            logger.warning(ex.message)
+        }
+        // Continua si el archivo ha sido creado exitosamente
+        if (imageFile != null) {
+            // Guardar un archivo: Ruta para usar con ACTION_VIEW intents
+            pictureImagePath = FileProvider.getUriForFile(this,"com.example.android.fileprovider", imageFile)
+            logger.info("Ruta: ${pictureImagePath}")
+            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, pictureImagePath)
+            try {
+                cameraActivityResultLauncher.launch(takePictureIntent)
+            } catch (e: ActivityNotFoundException) {
+                logger.warning("Camera app not found.")
+            }
+        }
+    }
+
+    @Throws(IOException::class)
+    private fun createImageFile(): File {
+        //Crear un nombre de archivo de imagen
+        val timeStamp: String = DateFormat.getDateInstance().format(Date())
+        val imageFileName = "${timeStamp}.jpg"
+        val imageFile = File(getExternalFilesDir(Environment.DIRECTORY_PICTURES),imageFileName)
+        return imageFile
     }
 
 
