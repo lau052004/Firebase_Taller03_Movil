@@ -20,9 +20,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.ktx.storage
 import com.lauovalle.taller_03_lauraovalle.FirebaseModel.Model
 import com.lauovalle.taller_03_lauraovalle.FirebaseModel.User
 import com.lauovalle.taller_03_lauraovalle.databinding.ActivityAuthBinding
@@ -33,11 +31,11 @@ import java.util.Date
 import java.util.logging.Logger
 
 class AuthActivity : AppCompatActivity() {
-    lateinit var binding: ActivityAuthBinding
+    private lateinit var binding: ActivityAuthBinding
 
     // Database
     private lateinit var dbRef: DatabaseReference
-    lateinit var user: User
+    private lateinit var user: User
 
     // Storage
     private var firebaseStorage: FirebaseStorage? = null
@@ -54,23 +52,23 @@ class AuthActivity : AppCompatActivity() {
         updateUI(it)
     }
 
-    var pictureImagePath: Uri? = null
+    private var pictureImagePath: Uri? = null
 
     // Create ActivityResultLauncher instances
     private val cameraActivityResultLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == RESULT_OK) {
             // Handle camera result
-            binding.ProfilePhoto!!.setImageURI(pictureImagePath)
-            binding.ProfilePhoto!!.scaleType = ImageView.ScaleType.FIT_CENTER
-            binding.ProfilePhoto!!.adjustViewBounds = true
+            binding.ProfilePhoto.setImageURI(pictureImagePath)
+            binding.ProfilePhoto.scaleType = ImageView.ScaleType.FIT_CENTER
+            binding.ProfilePhoto.adjustViewBounds = true
             logger.info("Image capture successfully.")
         } else {
             logger.warning("Image capture failed.")
         }
     }
 
-    val pickMedia = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+    private val pickMedia = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == RESULT_OK) {
             val data: Intent? = result.data
             pictureImagePath = data?.data
@@ -160,8 +158,8 @@ class AuthActivity : AppCompatActivity() {
             TODO()
         }
         else {
-
-            var userId = dbRef.push().key!!
+            user = User()
+            val userId = dbRef.push().key!!
             user.key = userId
             user.nombre = binding.Name.text.toString()
             user.apellido = binding.LastName.text.toString()
@@ -175,9 +173,9 @@ class AuthActivity : AppCompatActivity() {
             }
 
             // Guardar la foto en storage
-            val reference = firebaseStorage!!.reference.child("Images").child("${userId}")
+            val reference = firebaseStorage!!.reference.child("Images").child(userId)
             reference.putFile(pictureImagePath!!).addOnSuccessListener {
-                reference.downloadUrl.addOnSuccessListener {uri ->
+                reference.downloadUrl.addOnSuccessListener {
                     val model = Model()
                     model.image = pictureImagePath.toString()
                     dbRef.child("Imagenes").push().setValue(model).addOnSuccessListener {
@@ -219,15 +217,15 @@ class AuthActivity : AppCompatActivity() {
 
 
     private fun updateUI(permission: Boolean) {
-        if(permission){
+        if (permission) {
             //granted
             dipatchTakePictureIntent()
-        }else{
+        } else {
             logger.warning("Permission denied")
         }
     }
 
-    fun dipatchTakePictureIntent() {
+    private fun dipatchTakePictureIntent() {
         val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         // Crear el archivo donde debería ir la foto
         var imageFile: File? = null
@@ -240,7 +238,7 @@ class AuthActivity : AppCompatActivity() {
         if (imageFile != null) {
             // Guardar un archivo: Ruta para usar con ACTION_VIEW intents
             pictureImagePath = FileProvider.getUriForFile(this,"com.example.android.fileprovider", imageFile)
-            logger.info("Ruta: ${pictureImagePath}")
+            logger.info("Ruta: $pictureImagePath")
             takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, pictureImagePath)
             try {
                 cameraActivityResultLauncher.launch(takePictureIntent)
@@ -255,12 +253,11 @@ class AuthActivity : AppCompatActivity() {
         //Crear un nombre de archivo de imagen
         val timeStamp: String = DateFormat.getDateInstance().format(Date())
         val imageFileName = "${timeStamp}.jpg"
-        val imageFile = File(getExternalFilesDir(Environment.DIRECTORY_PICTURES),imageFileName)
-        return imageFile
+        return File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), imageFileName)
     }
 
 
-    private fun showAlert(){
+    private fun showAlert() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("ERROR")
         builder.setMessage("Se ha producido un error autenticando al usuario")
