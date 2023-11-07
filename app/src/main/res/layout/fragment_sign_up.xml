@@ -96,7 +96,31 @@
             android:layout_height="50dp"
             android:ems="10"
             android:hint="Nro. Identificación"
-            android:inputType="textPassword" />
+            android:inputType="number" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/latitudInput"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:ems="10"
+                android:hint="Latitud"
+                android:inputType="phone" />
+
+            <EditText
+                android:id="@+id/longitudBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:ems="10"
+                android:hint="Longitud"
+                android:inputType="phone" />
+        </LinearLayout>
 
         <Space
             android:layout_width="match_parent"

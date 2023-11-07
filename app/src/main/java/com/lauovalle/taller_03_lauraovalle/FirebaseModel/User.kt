@@ -6,6 +6,6 @@ class User {
     var apellido: String = ""
     var nroId: String = ""
     var phone: String = ""
-    val latitud: String = ""
-    val longitud: String = ""
+    var latitud: String = ""
+    var longitud: String = ""
 }
