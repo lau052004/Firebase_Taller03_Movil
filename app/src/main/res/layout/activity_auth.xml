@@ -7,116 +7,46 @@
     tools:context=".AuthActivity">
 
     <LinearLayout
-        android:layout_width="0dp"
+        android:layout_width="260dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="@drawable/custom_switch"
+        android:orientation="horizontal"
+        android:paddingStart="5dp"
+        android:paddingEnd="5dp"
+        app:layout_constraintBottom_toTopOf="@+id/container"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintLeft_toRightOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-
-        <ImageView
-            android:id="@+id/ProfilePhoto"
-            android:layout_width="250dp"
-            android:layout_height="250dp"
-            android:src="@color/material_dynamic_neutral95"
-            android:layout_gravity="center"
-            />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <ImageButton
-                android:id="@+id/gallery_btn"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:scaleType="centerInside"
-                android:src="@mipmap/galeria"
-                android:layout_weight="50" />
-
-            <ImageButton
-                android:id="@+id/camera_btn"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:scaleType="centerInside"
-                android:src="@mipmap/camara2"
-                android:layout_weight="50"/>
-        </LinearLayout>
-
-        <EditText
-            android:id="@+id/Name"
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/LogIn_btn"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="Nombre"
-            android:inputType="text" />
+            android:layout_weight="2"
+            android:backgroundTint="@color/purple"
+            android:text="Acceder" />
 
-        <EditText
-            android:id="@+id/LastName"
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/SingUp_btn"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="Apellido"
-            android:inputType="text" />
-
-        <EditText
-            android:id="@+id/EmailAddress"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="Email"
-            android:inputType="textEmailAddress" />
-
-        <EditText
-            android:id="@+id/Password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="Contraseña"
-            android:inputType="textPassword" />
-
-        <EditText
-            android:id="@+id/Phone"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="Celular"
-            android:inputType="phone" />
-
-        <EditText
-            android:id="@+id/Identification"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="Nro. Identificación"
-            android:inputType="textPassword" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/SingUp_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Registrar" />
-
-            <Button
-                android:id="@+id/LogIn_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Acceder" />
-        </LinearLayout>
+            android:layout_weight="2"
+            android:backgroundTint="@color/gray"
+            android:text="Registrar" />
 
     </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/container"
+        android:layout_width="326dp"
+        android:layout_height="619dp"
+        android:layout_marginTop="100dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.494"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </FrameLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
