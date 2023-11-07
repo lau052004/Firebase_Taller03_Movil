@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.LogInFragment">
+    tools:context=".Fragments.LogInFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -41,11 +41,11 @@
                 android:layout_height="20dp" />
 
             <Button
-                android:id="@+id/button4"
+                android:id="@+id/LogInBtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/purple"
-                android:text="Button" />
+                android:text="Login" />
 
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.SignUpFragment">
+    tools:context=".Fragments.SignUpFragment">
 
     <!-- TODO: Update blank fragment layout -->
 
@@ -107,7 +107,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/purple"
-            android:text="Button" />
+            android:text="Signup" />
 
     </LinearLayout>
 

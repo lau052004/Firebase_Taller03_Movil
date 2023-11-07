@@ -1,4 +1,4 @@
-package com.lauovalle.taller_03_lauraovalle.fragments
+package com.lauovalle.taller_03_lauraovalle.Fragments
 
 import android.R
 import android.content.ActivityNotFoundException
@@ -17,7 +17,6 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
@@ -25,7 +24,9 @@ import com.google.android.gms.tasks.Task
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DatabaseReference
+import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.lauovalle.taller_03_lauraovalle.AuthActivity
 import com.lauovalle.taller_03_lauraovalle.FirebaseModel.Model
@@ -99,6 +100,7 @@ class SignUpFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         imageViewContainer = binding.ProfilePhoto
+
         binding.cameraBtn.setOnClickListener {
             verifyPermissions(requireContext(), android.Manifest.permission.CAMERA, "El permiso es requerido para...")
         }
@@ -107,6 +109,10 @@ class SignUpFragment : Fragment() {
             pickGalleryImage.type = "image/*"
             galleryActivityResultLauncher.launch(pickGalleryImage)
         }
+
+        mAuth = Firebase.auth
+
+        setup()
     }
 
     private fun setup() {
@@ -122,10 +128,11 @@ class SignUpFragment : Fragment() {
     private fun createUser() {
         val email = binding.EmailAddress.text.toString()
         val password = binding.Password.text.toString()
+
         mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener { task: Task<AuthResult> ->
             if(task.isSuccessful) {
                 // Guardar la información del usuario
-                // saveUserData()
+                saveUserData()
                 // Intent para ver si los datos se guardan bien
                 val homeIntent = Intent(requireContext(), HomeActivity::class.java)
                 homeIntent.putExtra("email", email)
@@ -140,7 +147,7 @@ class SignUpFragment : Fragment() {
     private fun saveUserData() {
         if(binding.EmailAddress.text.isEmpty() || binding.Name.text.isEmpty() || binding.LastName.text.isEmpty() || binding.Password.text.isEmpty() || binding.Phone.text.isEmpty() || binding.Identification.text.isEmpty()) {
             // SnackBar pidiendo que se llenen todos los datos
-            Snackbar.make(requireView(), "Por favor, llene todos los campos", Snackbar.LENGTH_LONG).show()
+            Snackbar.make(requireActivity().findViewById(R.id.content), "Por favor, llene todos los campos", Snackbar.LENGTH_LONG).show()
         } else {
             user = User()
             val userId = dbRef.push().key!!
