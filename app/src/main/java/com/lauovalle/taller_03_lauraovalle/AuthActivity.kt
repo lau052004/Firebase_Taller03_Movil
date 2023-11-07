@@ -18,8 +18,8 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.lauovalle.taller_03_lauraovalle.FirebaseModel.User
-import com.lauovalle.taller_03_lauraovalle.Fragments.LogInFragment
-import com.lauovalle.taller_03_lauraovalle.Fragments.SignUpFragment
+import com.lauovalle.taller_03_lauraovalle.fragments.LogInFragment
+import com.lauovalle.taller_03_lauraovalle.fragments.SignUpFragment
 import com.lauovalle.taller_03_lauraovalle.databinding.ActivityAuthBinding
 import java.io.File
 import java.io.IOException
@@ -94,35 +94,35 @@ class AuthActivity : AppCompatActivity() {
         firebaseStorage = FirebaseStorage.getInstance()
 
         setup()
+    }
+
+    private fun setup() {
         supportFragmentManager.beginTransaction()
             .replace(binding.container.id, LogInFragment())
             .commit()
 
         binding.LogInBtn.setOnClickListener {
-           if (!login) {
-               supportFragmentManager.beginTransaction()
-                   .replace(binding.container.id, LogInFragment())
-                   .commit()
-               login = true
+            if (!login) {
+                supportFragmentManager.beginTransaction()
+                    .replace(binding.container.id, LogInFragment())
+                    .commit()
+                login = true
 
-               binding.LogInBtn.setBackgroundColor(ContextCompat.getColor(this, R.color.purple))
-               binding.SingUpBtn.setBackgroundColor(ContextCompat.getColor(this, R.color.gray))
-           }
+                binding.LogInBtn.setBackgroundColor(ContextCompat.getColor(this, R.color.purple))
+                binding.SingUpBtn.setBackgroundColor(ContextCompat.getColor(this, R.color.gray))
+            }
         }
         binding.SingUpBtn.setOnClickListener {
-           if (login) {
-               supportFragmentManager.beginTransaction()
-                   .replace(binding.container.id, SignUpFragment())
-                   .commit()
-               login = false
+            if (login) {
+                supportFragmentManager.beginTransaction()
+                    .replace(binding.container.id, SignUpFragment())
+                    .commit()
+                login = false
 
-               binding.SingUpBtn.setBackgroundColor(ContextCompat.getColor(this, R.color.purple))
-               binding.LogInBtn.setBackgroundColor(ContextCompat.getColor(this, R.color.gray))
-           }
+                binding.SingUpBtn.setBackgroundColor(ContextCompat.getColor(this, R.color.purple))
+                binding.LogInBtn.setBackgroundColor(ContextCompat.getColor(this, R.color.gray))
+            }
         }
-    }
-
-    private fun setup() {
         /*title = "Atenticación"
 
         // ----------------------- CARGAR FOTO
