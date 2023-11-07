@@ -1,28 +1,25 @@
 package com.lauovalle.taller_03_lauraovalle
 
-import android.content.ActivityNotFoundException
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
-import android.provider.MediaStore
 import android.view.View
-import android.widget.ImageView
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
-import androidx.core.content.FileProvider
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
-import com.lauovalle.taller_03_lauraovalle.FirebaseModel.Model
 import com.lauovalle.taller_03_lauraovalle.FirebaseModel.User
+import com.lauovalle.taller_03_lauraovalle.Fragments.LogInFragment
+import com.lauovalle.taller_03_lauraovalle.Fragments.SignUpFragment
 import com.lauovalle.taller_03_lauraovalle.databinding.ActivityAuthBinding
 import java.io.File
 import java.io.IOException
@@ -40,6 +37,10 @@ class AuthActivity : AppCompatActivity() {
     // Storage
     private var firebaseStorage: FirebaseStorage? = null
 
+    private lateinit var mAuth: FirebaseAuth
+
+    private var login: Boolean = true
+
     companion object {
         val TAG: String = AuthActivity::class.java.name
     }
@@ -55,7 +56,7 @@ class AuthActivity : AppCompatActivity() {
     private var pictureImagePath: Uri? = null
 
     // Create ActivityResultLauncher instances
-    private val cameraActivityResultLauncher = registerForActivityResult(
+    /*private val cameraActivityResultLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == RESULT_OK) {
             // Handle camera result
@@ -66,16 +67,16 @@ class AuthActivity : AppCompatActivity() {
         } else {
             logger.warning("Image capture failed.")
         }
-    }
+    }*/
 
-    private val pickMedia = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+    /*private val pickMedia = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == RESULT_OK) {
             val data: Intent? = result.data
             pictureImagePath = data?.data
 
             binding.ProfilePhoto.setImageURI(pictureImagePath)
         }
-    }
+    }*/
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -86,15 +87,43 @@ class AuthActivity : AppCompatActivity() {
         val view: View = binding.root
         setContentView(view)
 
+        mAuth = Firebase.auth
+
         // --------------------- DATA BASE REFERENCE
         dbRef = FirebaseDatabase.getInstance().getReference("Usuarios")
         firebaseStorage = FirebaseStorage.getInstance()
 
         setup()
+        supportFragmentManager.beginTransaction()
+            .replace(binding.container.id, LogInFragment())
+            .commit()
+
+        binding.LogInBtn.setOnClickListener {
+           if (!login) {
+               supportFragmentManager.beginTransaction()
+                   .replace(binding.container.id, LogInFragment())
+                   .commit()
+               login = true
+
+               binding.LogInBtn.setBackgroundColor(ContextCompat.getColor(this, R.color.purple))
+               binding.SingUpBtn.setBackgroundColor(ContextCompat.getColor(this, R.color.gray))
+           }
+        }
+        binding.SingUpBtn.setOnClickListener {
+           if (login) {
+               supportFragmentManager.beginTransaction()
+                   .replace(binding.container.id, SignUpFragment())
+                   .commit()
+               login = false
+
+               binding.SingUpBtn.setBackgroundColor(ContextCompat.getColor(this, R.color.purple))
+               binding.LogInBtn.setBackgroundColor(ContextCompat.getColor(this, R.color.gray))
+           }
+        }
     }
 
     private fun setup() {
-        title = "Atenticación"
+        /*title = "Atenticación"
 
         // ----------------------- CARGAR FOTO
         // Pick Image from gallery
@@ -113,9 +142,8 @@ class AuthActivity : AppCompatActivity() {
 
         // ----------------------- REGISTRARSE
         binding.SingUpBtn.setOnClickListener{
-            if(binding.EmailAddress.text.isNotEmpty() && binding.Password.text.isNotEmpty())
-            {
-                FirebaseAuth.getInstance().createUserWithEmailAndPassword(binding.EmailAddress.text.toString(),binding.Password.text.toString()).addOnCompleteListener{
+            if(binding.EmailAddress.text.isNotEmpty() && binding.Password.text.isNotEmpty()) {
+                mAuth.createUserWithEmailAndPassword(binding.EmailAddress.text.toString(),binding.Password.text.toString()).addOnCompleteListener{
                     if(it.isSuccessful) {
                         // Guardar la información del usuario
                         saveUserData()
@@ -128,15 +156,16 @@ class AuthActivity : AppCompatActivity() {
                         showAlert()
                     }
                 }
+            } else {
+                Snackbar.make(binding.root, "Por favor, llene todos los campos", Snackbar.LENGTH_LONG).show()
             }
         }
 
 
         // ------------------------- INICIAR SESIÓN
-        binding.LogInBtn.setOnClickListener{
-            if(binding.EmailAddress.text.isNotEmpty() && binding.Password.text.isNotEmpty())
-            {
-                FirebaseAuth.getInstance().signInWithEmailAndPassword(binding.EmailAddress.text.toString(),binding.Password.text.toString()).addOnCompleteListener{
+        binding.LogInBtn.setOnClickListener {
+            if(binding.EmailAddress.text.isNotEmpty() && binding.Password.text.isNotEmpty()) {
+                mAuth.signInWithEmailAndPassword(binding.EmailAddress.text.toString(),binding.Password.text.toString()).addOnCompleteListener{
                     if(it.isSuccessful) {
                         val homeIntent = Intent(this, HomeActivity::class.java)
                         homeIntent.putExtra("email",binding.EmailAddress.text.toString())
@@ -148,16 +177,14 @@ class AuthActivity : AppCompatActivity() {
                     }
                 }
             }
-        }
-
+        }*/
     }
 
     private fun saveUserData() {
-        if(binding.EmailAddress.text.isEmpty() || binding.Name.text.isEmpty() || binding.LastName.text.isEmpty() || binding.Password.text.isEmpty() || binding.Phone.text.isEmpty() || binding.Identification.text.isEmpty()) {
+        /*if(binding.EmailAddress.text.isEmpty() || binding.Name.text.isEmpty() || binding.LastName.text.isEmpty() || binding.Password.text.isEmpty() || binding.Phone.text.isEmpty() || binding.Identification.text.isEmpty()) {
             // SnackBar pidiendo que se llenen todos los datos
-            TODO()
-        }
-        else {
+            Snackbar.make(binding.root, "Por favor, llene todos los campos", Snackbar.LENGTH_LONG).show()
+        } else {
             user = User()
             val userId = dbRef.push().key!!
             user.key = userId
@@ -187,7 +214,7 @@ class AuthActivity : AppCompatActivity() {
             }
 
             TODO("Incluir la latitud y la longitud")
-        }
+        }*/
     }
 
     private fun verifyPermissions(context: Context, permission: String, rationale: String) {
@@ -214,8 +241,6 @@ class AuthActivity : AppCompatActivity() {
         }
     }
 
-
-
     private fun updateUI(permission: Boolean) {
         if (permission) {
             //granted
@@ -226,7 +251,7 @@ class AuthActivity : AppCompatActivity() {
     }
 
     private fun dipatchTakePictureIntent() {
-        val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        /*val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         // Crear el archivo donde debería ir la foto
         var imageFile: File? = null
         try {
@@ -245,7 +270,7 @@ class AuthActivity : AppCompatActivity() {
             } catch (e: ActivityNotFoundException) {
                 logger.warning("Camera app not found.")
             }
-        }
+        }*/
     }
 
     @Throws(IOException::class)
@@ -255,7 +280,6 @@ class AuthActivity : AppCompatActivity() {
         val imageFileName = "${timeStamp}.jpg"
         return File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), imageFileName)
     }
-
 
     private fun showAlert() {
         val builder = AlertDialog.Builder(this)
