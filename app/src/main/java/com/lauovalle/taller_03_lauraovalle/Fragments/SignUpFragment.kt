@@ -1,6 +1,5 @@
 package com.lauovalle.taller_03_lauraovalle.Fragments
 
-import android.R
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
@@ -20,12 +19,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
+import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.gms.tasks.Task
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.lauovalle.taller_03_lauraovalle.AuthActivity
@@ -82,6 +83,7 @@ class SignUpFragment : Fragment() {
         if (result.resultCode == AppCompatActivity.RESULT_OK) {
             // Handle gallery result
             val imageUri: Uri? = result.data!!.data
+            pictureImagePath = imageUri
             imageViewContainer!!.setImageURI(imageUri)
             logger.info("Image loaded successfully")
         }
@@ -111,6 +113,8 @@ class SignUpFragment : Fragment() {
         }
 
         mAuth = Firebase.auth
+        dbRef = FirebaseDatabase.getInstance().getReference("Usuarios")
+        firebaseStorage = FirebaseStorage.getInstance()
 
         setup()
     }
@@ -120,7 +124,7 @@ class SignUpFragment : Fragment() {
             if(binding.EmailAddress.text.isNotEmpty() && binding.Password.text.isNotEmpty()) {
                 createUser()
             } else {
-                Snackbar.make(requireActivity().findViewById(R.id.content), "Por favor, llene todos los campos", Snackbar.LENGTH_LONG).show()
+                Snackbar.make(requireActivity().findViewById(android.R.id.content), "Por favor, llene todos los campos", Snackbar.LENGTH_LONG).show()
             }
         }
     }
@@ -132,22 +136,25 @@ class SignUpFragment : Fragment() {
         mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener { task: Task<AuthResult> ->
             if(task.isSuccessful) {
                 // Guardar la información del usuario
-                saveUserData()
-                // Intent para ver si los datos se guardan bien
-                val homeIntent = Intent(requireContext(), HomeActivity::class.java)
-                homeIntent.putExtra("email", email)
-                homeIntent.putExtra("password", password)
-                startActivity(homeIntent)
+                saveUserData {
+                    // Ir a la pantalla de inicio
+                    val homeIntent = Intent(requireContext(), HomeActivity::class.java)
+                    homeIntent.putExtra("email", email)
+                    homeIntent.putExtra("password", password)
+                    startActivity(homeIntent)
+                }
             } else {
                 showAlert()
             }
         }
     }
 
-    private fun saveUserData() {
-        if(binding.EmailAddress.text.isEmpty() || binding.Name.text.isEmpty() || binding.LastName.text.isEmpty() || binding.Password.text.isEmpty() || binding.Phone.text.isEmpty() || binding.Identification.text.isEmpty()) {
+    private fun saveUserData(onSuccessListener: OnSuccessListener<Void>? = null) {
+        if(binding.EmailAddress.text.isEmpty() || binding.Name.text.isEmpty() || binding.LastName.text.isEmpty() || binding.Password.text.isEmpty() || binding.Phone.text.isEmpty() || binding.Identification.text.isEmpty() || binding.latitudInput.text.isEmpty() || binding.longitudBtn.text.isEmpty()) {
             // SnackBar pidiendo que se llenen todos los datos
-            Snackbar.make(requireActivity().findViewById(R.id.content), "Por favor, llene todos los campos", Snackbar.LENGTH_LONG).show()
+            Snackbar.make(requireActivity().findViewById(android.R.id.content), "Por favor, llene todos los campos", Snackbar.LENGTH_LONG).show()
+        } else if (pictureImagePath == null) {
+            Snackbar.make(requireActivity().findViewById(android.R.id.content), "Por favor, seleccione una imagen", Snackbar.LENGTH_LONG).show()
         } else {
             user = User()
             val userId = dbRef.push().key!!
@@ -156,28 +163,31 @@ class SignUpFragment : Fragment() {
             user.apellido = binding.LastName.text.toString()
             user.phone = binding.Phone.text.toString()
             user.nroId = binding.Identification.text.toString()
+            user.latitud = binding.latitudInput.text.toString()
+            user.longitud = binding.longitudBtn.text.toString()
 
             dbRef.child(userId).setValue(user).addOnCompleteListener{
-                Toast.makeText(requireContext(),"Datos guardados correctamente", Toast.LENGTH_LONG).show()
+                guardarImagen(userId, onSuccessListener)
             }.addOnFailureListener {err ->
                 Toast.makeText(requireContext(),"Error: ${err.message}", Toast.LENGTH_LONG).show()
             }
+        }
+    }
 
-            // Guardar la foto en storage
-            val reference = firebaseStorage!!.reference.child("Images").child(userId)
-            reference.putFile(pictureImagePath!!).addOnSuccessListener {
-                reference.downloadUrl.addOnSuccessListener {
-                    val model = Model()
-                    model.image = pictureImagePath.toString()
-                    dbRef.child("Imagenes").push().setValue(model).addOnSuccessListener {
-                        requireActivity().finish()
-                    }.addOnFailureListener{
-                        Toast.makeText(requireContext(), "Error al subir la imagen", Toast.LENGTH_LONG).show()
-                    }
+    private fun guardarImagen(userId: String, onSuccessListener: OnSuccessListener<Void>? = null) {
+        // Guardar la foto en storage
+        val reference = firebaseStorage!!.reference.child("Images").child(userId)
+        reference.putFile(pictureImagePath!!).addOnSuccessListener {
+            reference.downloadUrl.addOnSuccessListener {
+                val model = Model()
+                model.image = pictureImagePath.toString()
+                dbRef.child("Imagenes").push().setValue(model).addOnSuccessListener {
+                    requireActivity().finish()
+                    onSuccessListener?.onSuccess(null)
+                }.addOnFailureListener{
+                    Toast.makeText(requireContext(), "Error al subir la imagen", Toast.LENGTH_LONG).show()
                 }
             }
-
-            TODO("Incluir la latitud y la longitud")
         }
     }
 
