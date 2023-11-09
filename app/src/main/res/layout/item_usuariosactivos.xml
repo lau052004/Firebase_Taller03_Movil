@@ -14,7 +14,8 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0">
+        app:layout_constraintVertical_bias="0.0"
+        android:background="@drawable/roundedbox">
 
         <TextView
             android:id="@+id/NombreUsuario"
@@ -23,7 +24,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:background="@drawable/roundedbox"
             android:padding="10dp"/>
 
         <Space
@@ -38,7 +38,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/NombreUsuario"
             app:layout_constraintVertical_bias="0.0"
-            android:background="@drawable/roundedbox"
             android:padding="10dp"/>
 
         <Space

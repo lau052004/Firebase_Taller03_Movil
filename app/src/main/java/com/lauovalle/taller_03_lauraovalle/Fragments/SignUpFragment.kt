@@ -158,13 +158,13 @@ class SignUpFragment : Fragment() {
         val password = binding.Password.text.toString()
 
         mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
-            if(it.isSuccessful) {
+            if (it.isSuccessful) {
                 // Guardar la información del usuario
                 logger.info("Usuario creado correctamente")
                 saveUserData {
                     // Ir a la pantalla de inicio
                     val homeIntent = Intent(requireContext(), HomeActivity::class.java)
-                    Snackbar.make(requireActivity().findViewById(android.R.id.content), "Ok", Snackbar.LENGTH_LONG).show()
+                    Snackbar.make(requireActivity().findViewById(android.R.id.content), "Usuario creado con éxito", Snackbar.LENGTH_LONG).show()
                     homeIntent.putExtra("email", email)
                     homeIntent.putExtra("password", password)
                     startActivity(homeIntent)
@@ -174,6 +174,7 @@ class SignUpFragment : Fragment() {
             }
         }
     }
+
 
     private fun saveUserData(onSuccessListener: OnSuccessListener<Void>? = null) {
         if(binding.EmailAddress.text.isEmpty() || binding.Name.text.isEmpty() || binding.LastName.text.isEmpty() || binding.Password.text.isEmpty() || binding.Phone.text.isEmpty() || binding.Identification.text.isEmpty() || binding.longitud.text.isEmpty() || binding.longitud.text.isEmpty()) {
