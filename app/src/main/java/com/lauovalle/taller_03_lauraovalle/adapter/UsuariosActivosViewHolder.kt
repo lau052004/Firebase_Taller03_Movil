@@ -9,11 +9,17 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.lauovalle.taller_03_lauraovalle.FirebaseModel.UsuariosActivos
 import com.lauovalle.taller_03_lauraovalle.R
 
-class UsuariosActivosViewHolder (view: View): RecyclerView.ViewHolder(view){
+class UsuariosActivosViewHolder (view: View, listener: UsuariosActivosAdapter.onItemClickListener): RecyclerView.ViewHolder(view){
     val nombreUsuario = view.findViewById<TextView>(R.id.NombreUsuario)
     val correoUsuario = view.findViewById<TextView>(R.id.CorreoUsuario)
     fun render(usuarioActivo: UsuariosActivos){
         nombreUsuario.text = usuarioActivo.usuarioNombre
         correoUsuario.text = usuarioActivo.usuarioCorreo
+    }
+
+    init {
+        view.setOnClickListener {
+            listener.onItemClick(adapterPosition)
+        }
     }
 }

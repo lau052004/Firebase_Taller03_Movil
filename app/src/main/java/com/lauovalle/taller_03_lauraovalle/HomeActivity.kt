@@ -1,5 +1,6 @@
 package com.lauovalle.taller_03_lauraovalle
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -80,8 +81,21 @@ class HomeActivity : AppCompatActivity() {
 
 
     fun initRecyclerView() {
+
+        var adapter = UsuariosActivosAdapter(usuariosActivos)
+
         // Sacar la lista de los usuarios disponibles
         binding.ListaDisponibles.layoutManager = LinearLayoutManager(this)
-        binding.ListaDisponibles.adapter = UsuariosActivosAdapter(usuariosActivos)
+        binding.ListaDisponibles.adapter = adapter
+
+        adapter.setOnItemClickListener(object: UsuariosActivosAdapter.onItemClickListener {
+            override fun onItemClick(position: Int) {
+                Toast.makeText(this@HomeActivity, "Click en $position", Toast.LENGTH_SHORT).show()
+                // Intent
+                val intent = Intent(this@HomeActivity, Prueba::class.java)
+                intent.putExtra("nombre", usuariosActivos[position].usuarioCorreo)
+                startActivity(intent)
+            }
+        })
     }
 }
