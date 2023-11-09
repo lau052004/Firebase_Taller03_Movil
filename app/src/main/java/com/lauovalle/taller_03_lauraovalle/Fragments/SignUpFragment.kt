@@ -157,9 +157,10 @@ class SignUpFragment : Fragment() {
         val email = binding.EmailAddress.text.toString()
         val password = binding.Password.text.toString()
 
-        mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener { task: Task<AuthResult> ->
-            if(task.isSuccessful) {
+        mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
+            if(it.isSuccessful) {
                 // Guardar la información del usuario
+                logger.info("Usuario creado correctamente")
                 saveUserData {
                     // Ir a la pantalla de inicio
                     val homeIntent = Intent(requireContext(), HomeActivity::class.java)
@@ -175,7 +176,7 @@ class SignUpFragment : Fragment() {
     }
 
     private fun saveUserData(onSuccessListener: OnSuccessListener<Void>? = null) {
-        if(binding.EmailAddress.text.isEmpty() || binding.Name.text.isEmpty() || binding.LastName.text.isEmpty() || binding.Password.text.isEmpty() || binding.Phone.text.isEmpty() || binding.Identification.text.isEmpty() || binding.latitudInput.text.isEmpty() || binding.longitudInput.text.isEmpty()) {
+        if(binding.EmailAddress.text.isEmpty() || binding.Name.text.isEmpty() || binding.LastName.text.isEmpty() || binding.Password.text.isEmpty() || binding.Phone.text.isEmpty() || binding.Identification.text.isEmpty() || binding.longitud.text.isEmpty() || binding.longitud.text.isEmpty()) {
             // SnackBar pidiendo que se llenen todos los datos
             Snackbar.make(requireActivity().findViewById(android.R.id.content), "Por favor, llene todos los campos", Snackbar.LENGTH_LONG).show()
         } else if (pictureImagePath == null) {
@@ -188,8 +189,8 @@ class SignUpFragment : Fragment() {
             user.apellido = binding.LastName.text.toString()
             user.phone = binding.Phone.text.toString()
             user.nroId = binding.Identification.text.toString()
-            user.latitud = binding.latitudInput.text.toString()
-            user.longitud = binding.longitudInput.text.toString()
+            user.latitud = binding.latitud.text.toString()
+            user.longitud = binding.longitud.text.toString()
 
             dbRef.child(userId).setValue(user).addOnCompleteListener{
                 guardarImagen(userId, onSuccessListener)
@@ -258,15 +259,14 @@ class SignUpFragment : Fragment() {
         }
         else if(permission == 2) {
             logger.info("Permission granted")
-            var fusedLocationClient: FusedLocationProviderClient
-            fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
+            var fusedLocationClient: FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireContext())
 
             fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
                 if (location != null) {
                     val ubicacion = LatLng(location.latitude, location.longitude)
 
-                    binding.latitudInput.setText(ubicacion.latitude.toString())
-                    binding.longitudInput.setText(ubicacion.longitude.toString())
+                    binding.latitud.text = ubicacion.latitude.toString()
+                    binding.longitud.text = ubicacion.longitude.toString()
                 }
             }
         } else {

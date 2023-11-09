@@ -87,8 +87,8 @@ class MenuFragment : Fragment() {
 
     private fun alertChangeState() {
         val builder = AlertDialog.Builder(requireContext())
-        val user = mAuth.currentUser!!
-        val userBD = mDatabase.child(user.uid)
+        val user = mAuth.currentUser
+        val userBD = mDatabase.child(user?.uid.toString())
         userBD.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 // Assuming 'disponible' is a boolean field in your Firebase Realtime Database
@@ -101,7 +101,8 @@ class MenuFragment : Fragment() {
                     builder.setMessage("Cambiar a 'Disponible'?")
                 }
 
-                builder.setTitle("Cambiar estado")
+                builder.setCancelable(false)
+                    .setTitle("Cambiar estado")
                     .setPositiveButton("Si") { dialog, _ ->
                         // Update user status
                         mDatabase.child(mAuth.currentUser!!.uid).child("disponible")

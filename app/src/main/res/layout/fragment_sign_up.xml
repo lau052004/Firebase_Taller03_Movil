@@ -104,29 +104,28 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/latitudInput"
-                android:layout_width="wrap_content"
+                android:id="@+id/latitud"
+                android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:ems="10"
-                android:textSize="15dp"
                 android:hint="Latitud"
                 android:inputType="phone"
-                />
+                android:textSize="14sp" />
 
             <Space
                 android:layout_width="28dp"
                 android:layout_height="match_parent" />
 
             <TextView
-                android:id="@+id/longitudInput"
-                android:layout_width="wrap_content"
+                android:id="@+id/longitud"
+                android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:ems="10"
-                android:textSize="15dp"
                 android:hint="Longitud"
-                android:inputType="phone" />
+                android:inputType="phone"
+                android:textSize="14sp" />
         </LinearLayout>
 
         <Space
