@@ -24,10 +24,7 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun setup(email: String, pass: String) {
-        title = "Inicio"
 
-        binding.EmailAddress.text = email
-        binding.Password.text = pass
 
     }
 
