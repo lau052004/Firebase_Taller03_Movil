@@ -103,21 +103,28 @@
             android:layout_height="50dp"
             android:orientation="horizontal">
 
-            <EditText
+            <TextView
                 android:id="@+id/latitudInput"
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
                 android:layout_weight="1"
                 android:ems="10"
+                android:textSize="15dp"
                 android:hint="Latitud"
-                android:inputType="phone" />
+                android:inputType="phone"
+                />
 
-            <EditText
-                android:id="@+id/longitudBtn"
+            <Space
+                android:layout_width="28dp"
+                android:layout_height="match_parent" />
+
+            <TextView
+                android:id="@+id/longitudInput"
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
                 android:layout_weight="1"
                 android:ems="10"
+                android:textSize="15dp"
                 android:hint="Longitud"
                 android:inputType="phone" />
         </LinearLayout>
