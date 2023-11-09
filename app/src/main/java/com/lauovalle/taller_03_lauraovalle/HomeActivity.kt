@@ -56,6 +56,7 @@ class HomeActivity : AppCompatActivity() {
     private fun crearLista(usuarioActual: String?) {
         dbRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
+                usuariosActivos.clear()
                 Toast.makeText(this@HomeActivity, "datos an cambiado", Toast.LENGTH_SHORT).show()
                 for (userSnapshot in dataSnapshot.children) {
                     val usuario = userSnapshot.getValue(User::class.java)
