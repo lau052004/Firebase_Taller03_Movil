@@ -6,6 +6,7 @@ class User {
     var apellido: String = ""
     var nroId: String = ""
     var phone: String = ""
+    var correo: String = ""
     var latitud: String = ""
     var longitud: String = ""
     var disponible: Boolean = false
