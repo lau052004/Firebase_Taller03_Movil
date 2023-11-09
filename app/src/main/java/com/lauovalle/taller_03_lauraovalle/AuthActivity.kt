@@ -1,5 +1,6 @@
 package com.lauovalle.taller_03_lauraovalle
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -22,6 +23,9 @@ class AuthActivity : AppCompatActivity() {
         // llama al método getRoot() para obtener una referencia a la vista raíz
         val view: View = binding.root
         setContentView(view)
+
+        val intent:Intent = Intent(this, HomeActivity::class.java)
+        startActivity(intent)
 
         setup()
     }
