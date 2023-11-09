@@ -27,7 +27,7 @@ class AuthActivity : AppCompatActivity() {
         val intent:Intent = Intent(this, HomeActivity::class.java)
         startActivity(intent)
 
-        //setup()
+        setup()
     }
 
     private fun setup() {
