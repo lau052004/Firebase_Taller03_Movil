@@ -58,10 +58,9 @@ class HomeActivity : AppCompatActivity() {
         dbRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 usuariosActivos.clear()
-                Toast.makeText(this@HomeActivity, "datos an cambiado", Toast.LENGTH_SHORT).show()
                 for (userSnapshot in dataSnapshot.children) {
                     val usuario = userSnapshot.getValue(User::class.java)
-                    if (usuario != null && usuario.key != usuarioActual && usuario.disponible) {
+                    if (usuario != null && usuario.disponible) {
                         val nombre = usuario.nombre
                         val correo = usuario.correo
                         // Haz algo con el nombre y el correo electrónico, como mostrarlos en tu ListView
