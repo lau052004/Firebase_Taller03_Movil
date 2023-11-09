@@ -41,7 +41,7 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragmentContainerView2"
-        android:name="com.lauovalle.taller_03_lauraovalle.MenuFragment"
+        android:name="com.lauovalle.taller_03_lauraovalle.Fragments.MenuFragment"
         android:layout_width="match_parent"
         android:layout_height="75dp"
         app:layout_constraintBottom_toBottomOf="parent"
