@@ -92,7 +92,7 @@ class HomeActivity : AppCompatActivity() {
             override fun onItemClick(position: Int) {
                 Toast.makeText(this@HomeActivity, "Click en $position", Toast.LENGTH_SHORT).show()
                 // Intent
-                val intent = Intent(this@HomeActivity, Prueba::class.java)
+                val intent = Intent(this@HomeActivity, MapsActivity::class.java)
                 intent.putExtra("nombre", usuariosActivos[position].usuarioCorreo)
                 startActivity(intent)
             }
