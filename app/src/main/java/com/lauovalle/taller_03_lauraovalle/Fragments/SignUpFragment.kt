@@ -156,6 +156,13 @@ class SignUpFragment : Fragment() {
     private fun createUser() {
         val email = binding.EmailAddress.text.toString()
         val password = binding.Password.text.toString()
+        if (binding.EmailAddress.text.isEmpty() || binding.Name.text.isEmpty() || binding.LastName.text.isEmpty() || binding.Password.text.isEmpty() || binding.Phone.text.isEmpty() || binding.Identification.text.isEmpty() || binding.longitud.text.isEmpty() || binding.longitud.text.isEmpty()) {
+            Snackbar.make(requireActivity().findViewById(android.R.id.content), "Por favor, llene todos los campos", Snackbar.LENGTH_LONG).show()
+            return
+        } else if (pictureImagePath == null) {
+            Snackbar.make(requireActivity().findViewById(android.R.id.content), "Por favor, seleccione una imagen", Snackbar.LENGTH_LONG).show()
+            return
+        }
 
         mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
             if(it.isSuccessful) {
@@ -176,27 +183,24 @@ class SignUpFragment : Fragment() {
     }
 
     private fun saveUserData(onSuccessListener: OnSuccessListener<Void>? = null) {
-        if(binding.EmailAddress.text.isEmpty() || binding.Name.text.isEmpty() || binding.LastName.text.isEmpty() || binding.Password.text.isEmpty() || binding.Phone.text.isEmpty() || binding.Identification.text.isEmpty() || binding.longitud.text.isEmpty() || binding.longitud.text.isEmpty()) {
-            // SnackBar pidiendo que se llenen todos los datos
-            Snackbar.make(requireActivity().findViewById(android.R.id.content), "Por favor, llene todos los campos", Snackbar.LENGTH_LONG).show()
-        } else if (pictureImagePath == null) {
-            Snackbar.make(requireActivity().findViewById(android.R.id.content), "Por favor, seleccione una imagen", Snackbar.LENGTH_LONG).show()
-        } else {
-            user = User()
-            val userId = dbRef.push().key!!
-            user.key = userId
-            user.nombre = binding.Name.text.toString()
-            user.apellido = binding.LastName.text.toString()
-            user.phone = binding.Phone.text.toString()
-            user.nroId = binding.Identification.text.toString()
-            user.latitud = binding.latitud.text.toString()
-            user.longitud = binding.longitud.text.toString()
+        user = User()
+        if (mAuth.currentUser == null) {
+            showAlert()
+            return
+        }
+        val userId = mAuth.currentUser?.uid.toString()
+        user.key = userId
+        user.nombre = binding.Name.text.toString()
+        user.apellido = binding.LastName.text.toString()
+        user.phone = binding.Phone.text.toString()
+        user.nroId = binding.Identification.text.toString()
+        user.latitud = binding.latitud.text.toString()
+        user.longitud = binding.longitud.text.toString()
 
-            dbRef.child(userId).setValue(user).addOnCompleteListener{
-                guardarImagen(userId, onSuccessListener)
-            }.addOnFailureListener {err ->
-                Toast.makeText(requireContext(),"Error: ${err.message}", Toast.LENGTH_LONG).show()
-            }
+        dbRef.child(userId).setValue(user).addOnCompleteListener{
+            guardarImagen(userId, onSuccessListener)
+        }.addOnFailureListener {err ->
+            Toast.makeText(requireContext(),"Error: ${err.message}", Toast.LENGTH_LONG).show()
         }
     }
 

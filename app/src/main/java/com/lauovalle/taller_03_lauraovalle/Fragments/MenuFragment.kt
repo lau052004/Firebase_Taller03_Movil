@@ -40,7 +40,7 @@ class MenuFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         mAuth = Firebase.auth
-        mDatabase = FirebaseDatabase.getInstance().getReference("users")
+        mDatabase = FirebaseDatabase.getInstance().getReference("Usuarios")
 
         setup()
     }
@@ -105,7 +105,8 @@ class MenuFragment : Fragment() {
                     .setTitle("Cambiar estado")
                     .setPositiveButton("Si") { dialog, _ ->
                         // Update user status
-                        mDatabase.child(mAuth.currentUser!!.uid).child("disponible")
+
+                        userBD.child("disponible")
                             .setValue(!disponible).addOnSuccessListener {
                                 Toast.makeText(requireContext(), "Estado actualizado", Toast.LENGTH_SHORT).show()
                         }

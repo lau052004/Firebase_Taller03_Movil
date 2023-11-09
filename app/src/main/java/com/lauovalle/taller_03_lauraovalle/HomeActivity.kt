@@ -41,21 +41,22 @@ class HomeActivity : AppCompatActivity() {
         //val pass = bundle?.getString("password")
 
         //setup(email?:"",pass?:"")
+    }
 
-        var usuarioActual = mAuth.currentUser?.uid
-
+    override fun onResume() {
+        super.onResume()
+        if (mAuth.currentUser == null) {
+            finish()
+        }
+        val usuarioActual = mAuth.currentUser?.uid
 
         crearLista(usuarioActual)
-
-        initRecyclerView()
-
     }
 
     private fun crearLista(usuarioActual: String?) {
-        val query = dbRef.orderByChild("disponible").equalTo(true)
-
-        query.addChildEventListener(object : ValueEventListener, com.google.firebase.database.ChildEventListener {
+        dbRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
+                Toast.makeText(this@HomeActivity, "datos an cambiado", Toast.LENGTH_SHORT).show()
                 for (userSnapshot in dataSnapshot.children) {
                     val usuario = userSnapshot.getValue(User::class.java)
                     if (usuario != null && usuario.key != usuarioActual && usuario.disponible) {
@@ -65,35 +66,14 @@ class HomeActivity : AppCompatActivity() {
                         usuariosActivos.add(UsuariosActivos(nombre, correo))
                     }
                 }
+
+                initRecyclerView()
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
                 // Maneja errores si es necesario
                 Toast.makeText(this@HomeActivity, "Error", Toast.LENGTH_LONG).show()
             }
-
-            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-                val usuario = snapshot.getValue(User::class.java)
-                if (usuario != null && usuario.key != usuarioActual && usuario.disponible) {
-                    val nombre = usuario.nombre
-                    val correo = usuario.correo
-                    // Haz algo con el nombre y el correo electrónico, como mostrarlos en tu ListView
-                    usuariosActivos.add(UsuariosActivos(nombre, correo))
-                    binding.ListaDisponibles.adapter?.notifyDataSetChanged()
-                }
-            }
-
-            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
-                val usuario = snapshot.getValue(User::class.java)
-                if (usuario != null && usuario.key != usuarioActual && !usuario.disponible) {
-                    usuariosActivos.remove(UsuariosActivos(usuario.nombre, usuario.correo))
-                    binding.ListaDisponibles.adapter?.notifyDataSetChanged()
-                }
-            }
-
-            override fun onChildRemoved(snapshot: DataSnapshot) {}
-
-            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
         })
     }
 
