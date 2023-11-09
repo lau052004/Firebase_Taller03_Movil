@@ -8,4 +8,5 @@ class User {
     var phone: String = ""
     var latitud: String = ""
     var longitud: String = ""
+    var disponible: Boolean = false
 }

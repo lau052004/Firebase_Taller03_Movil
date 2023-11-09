@@ -1,9 +1,11 @@
 package com.lauovalle.taller_03_lauraovalle.Fragments
 
+import android.annotation.SuppressLint
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.Location
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
@@ -19,6 +21,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.gms.tasks.Task
 import com.google.android.material.snackbar.Snackbar
@@ -43,6 +51,7 @@ import java.util.logging.Logger
 
 class SignUpFragment : Fragment() {
     private lateinit var binding: FragmentSignUpBinding
+    private lateinit var permission: String
 
     companion object {
         val TAG: String = AuthActivity::class.java.name
@@ -50,9 +59,19 @@ class SignUpFragment : Fragment() {
     private val logger = Logger.getLogger(TAG)
 
     // Permission handler
-    private val getSimplePermission = registerForActivityResult(
-        ActivityResultContracts.RequestPermission()) {
-        updateUI(it)
+
+
+    private val getSimplePermission = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isPermissionGranted ->
+        val requestCode = if (isPermissionGranted) {
+            when (permission) {
+                android.Manifest.permission.CAMERA -> 1
+                android.Manifest.permission.ACCESS_FINE_LOCATION -> 2
+                else -> 0 // Valor predeterminado en caso de que no se reconozca el permiso
+            }
+        } else {
+            -1 // Permiso denegado
+        }
+        updateUI(requestCode)
     }
 
     private var pictureImagePath: Uri? = null
@@ -103,7 +122,12 @@ class SignUpFragment : Fragment() {
 
         imageViewContainer = binding.ProfilePhoto
 
+        // Acceder a la latitud y la longitud
+        permission = android.Manifest.permission.ACCESS_FINE_LOCATION
+        verifyPermissions(requireContext(), android.Manifest.permission.ACCESS_FINE_LOCATION, "El permiso es requerido para acceder a la latitud y longitud")
+
         binding.cameraBtn.setOnClickListener {
+            permission = android.Manifest.permission.CAMERA
             verifyPermissions(requireContext(), android.Manifest.permission.CAMERA, "El permiso es requerido para...")
         }
         binding.galleryBtn.setOnClickListener {
@@ -139,6 +163,7 @@ class SignUpFragment : Fragment() {
                 saveUserData {
                     // Ir a la pantalla de inicio
                     val homeIntent = Intent(requireContext(), HomeActivity::class.java)
+                    Snackbar.make(requireActivity().findViewById(android.R.id.content), "Ok", Snackbar.LENGTH_LONG).show()
                     homeIntent.putExtra("email", email)
                     homeIntent.putExtra("password", password)
                     startActivity(homeIntent)
@@ -150,7 +175,7 @@ class SignUpFragment : Fragment() {
     }
 
     private fun saveUserData(onSuccessListener: OnSuccessListener<Void>? = null) {
-        if(binding.EmailAddress.text.isEmpty() || binding.Name.text.isEmpty() || binding.LastName.text.isEmpty() || binding.Password.text.isEmpty() || binding.Phone.text.isEmpty() || binding.Identification.text.isEmpty() || binding.latitudInput.text.isEmpty() || binding.longitudBtn.text.isEmpty()) {
+        if(binding.EmailAddress.text.isEmpty() || binding.Name.text.isEmpty() || binding.LastName.text.isEmpty() || binding.Password.text.isEmpty() || binding.Phone.text.isEmpty() || binding.Identification.text.isEmpty() || binding.latitudInput.text.isEmpty() || binding.longitudInput.text.isEmpty()) {
             // SnackBar pidiendo que se llenen todos los datos
             Snackbar.make(requireActivity().findViewById(android.R.id.content), "Por favor, llene todos los campos", Snackbar.LENGTH_LONG).show()
         } else if (pictureImagePath == null) {
@@ -164,7 +189,7 @@ class SignUpFragment : Fragment() {
             user.phone = binding.Phone.text.toString()
             user.nroId = binding.Identification.text.toString()
             user.latitud = binding.latitudInput.text.toString()
-            user.longitud = binding.longitudBtn.text.toString()
+            user.longitud = binding.longitudInput.text.toString()
 
             dbRef.child(userId).setValue(user).addOnCompleteListener{
                 guardarImagen(userId, onSuccessListener)
@@ -196,7 +221,11 @@ class SignUpFragment : Fragment() {
         when {
             ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED -> {
                 Snackbar.make(requireView(), "Ya tengo los permisos 😜", Snackbar.LENGTH_LONG).show()
-                updateUI(true)
+                if(permission == android.Manifest.permission.ACCESS_FINE_LOCATION) {
+                    updateUI(2)
+                } else {
+                    updateUI(1)
+                }
             }
             shouldShowRequestPermissionRationale(permission) -> {
                 // We display a snackbar with the justification for the permission, and once it disappears, we request it again.
@@ -217,11 +246,29 @@ class SignUpFragment : Fragment() {
     }
 
     // Update activity behavior and actions according to result of permission request
-    private fun updateUI(permission : Boolean) {
-        if (permission) {
+    @SuppressLint("MissingPermission")
+    private fun updateUI(permission : Int) {
+        if (permission == 0) {
+            logger.info("Permission granted but not recognized")
+        }
+        if (permission == 1) {
             //granted
             logger.info("Permission granted")
             dispatchTakePictureIntent()
+        }
+        else if(permission == 2) {
+            logger.info("Permission granted")
+            var fusedLocationClient: FusedLocationProviderClient
+            fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
+
+            fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
+                if (location != null) {
+                    val ubicacion = LatLng(location.latitude, location.longitude)
+
+                    binding.latitudInput.setText(ubicacion.latitude.toString())
+                    binding.longitudInput.setText(ubicacion.longitude.toString())
+                }
+            }
         } else {
             logger.warning("Permission denied")
         }
