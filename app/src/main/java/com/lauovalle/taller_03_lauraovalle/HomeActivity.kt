@@ -47,20 +47,23 @@ class HomeActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         if (mAuth.currentUser == null) {
+            val intent = Intent(this, AuthActivity::class.java)
+            startActivity(intent)
             finish()
         }
-        val usuarioActual = mAuth.currentUser?.uid
 
-        crearLista(usuarioActual)
+        val idUsuario = mAuth.currentUser?.uid
+
+        crearLista(idUsuario)
     }
 
-    private fun crearLista(usuarioActual: String?) {
+    private fun crearLista(idUsuario: String?) {
         dbRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 usuariosActivos.clear()
                 for (userSnapshot in dataSnapshot.children) {
                     val usuario = userSnapshot.getValue(User::class.java)
-                    if (usuario != null && usuario.disponible) {
+                    if (usuario != null && usuario.key != idUsuario && usuario.disponible) {
                         val nombre = usuario.nombre
                         val correo = usuario.correo
                         // Haz algo con el nombre y el correo electrónico, como mostrarlos en tu ListView

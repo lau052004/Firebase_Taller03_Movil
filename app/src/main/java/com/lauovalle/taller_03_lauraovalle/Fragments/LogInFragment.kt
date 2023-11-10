@@ -24,7 +24,7 @@ class LogInFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         binding = FragmentLogInBinding.inflate(inflater, container, false)
         return binding.root
@@ -40,8 +40,8 @@ class LogInFragment : Fragment() {
                 mAuth.signInWithEmailAndPassword(binding.EmailAddress.text.toString(),binding.Password.text.toString()).addOnCompleteListener{
                     if(it.isSuccessful) {
                         val homeIntent = Intent(requireContext(), HomeActivity::class.java)
-                        homeIntent.putExtra("email",binding.EmailAddress.text.toString())
-                        homeIntent.putExtra("password",binding.Password.text.toString())
+                        homeIntent.putExtra("email", binding.EmailAddress.text.toString())
+                        homeIntent.putExtra("password", binding.Password.text.toString())
                         startActivity(homeIntent)
 
                     } else {
