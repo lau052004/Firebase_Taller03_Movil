@@ -55,11 +55,6 @@ class MenuFragment : Fragment() {
         binding.menu.setOnItemSelectedListener {
             when(it.itemId) {
                 R.id.item_home -> {
-                    if (requireActivity() is HomeActivity) {
-                        return@setOnItemSelectedListener true
-                    }
-                    val intent = Intent(requireContext(), HomeActivity::class.java)
-                    startActivity(intent)
                     true
                 }
                 R.id.item_update -> {

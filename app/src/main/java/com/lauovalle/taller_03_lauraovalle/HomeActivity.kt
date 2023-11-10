@@ -70,8 +70,9 @@ class HomeActivity : AppCompatActivity() {
                         usuariosActivos.add(UsuariosActivos(nombre, correo))
                     }
                 }
-
-                initRecyclerView()
+                if (usuariosActivos.isNotEmpty()) {
+                    initRecyclerView()
+                }
             }
 
             override fun onCancelled(databaseError: DatabaseError) {

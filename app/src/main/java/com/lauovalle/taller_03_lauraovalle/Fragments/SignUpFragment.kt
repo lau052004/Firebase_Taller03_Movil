@@ -194,10 +194,10 @@ class SignUpFragment : Fragment() {
         user.nombre = binding.Name.text.toString()
         user.correo = binding.EmailAddress.text.toString()
         user.apellido = binding.LastName.text.toString()
-        user.phone = binding.Phone.text.toString()
-        user.nroId = binding.Identification.text.toString()
-        user.latitud = binding.latitud.text.toString()
-        user.longitud = binding.longitud.text.toString()
+        user.phone = binding.Phone.text.toString().toLong()
+        user.nroId = binding.Identification.text.toString().toLong()
+        user.latitud = binding.latitud.text.toString().toDouble()
+        user.longitud = binding.longitud.text.toString().toDouble()
 
         dbRef.child(userId).setValue(user).addOnCompleteListener{
             guardarImagen(userId, onSuccessListener)
