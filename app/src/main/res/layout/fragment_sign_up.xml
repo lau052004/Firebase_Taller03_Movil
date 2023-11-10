@@ -27,7 +27,8 @@
                 android:id="@+id/ProfilePhoto"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
-                android:src="@color/material_dynamic_neutral95" />
+                android:src="@color/material_dynamic_neutral95"
+                android:contentDescription="@string/img_desc" />
 
         </androidx.cardview.widget.CardView>
 
@@ -45,7 +46,8 @@
                 android:layout_height="50dp"
                 android:layout_weight="50"
                 android:scaleType="centerInside"
-                android:src="@mipmap/galeria" />
+                android:src="@mipmap/galeria"
+                android:contentDescription="@string/img_desc" />
 
             <ImageButton
                 android:id="@+id/camera_btn"
@@ -53,7 +55,8 @@
                 android:layout_height="50dp"
                 android:layout_weight="50"
                 android:scaleType="centerInside"
-                android:src="@mipmap/camara2" />
+                android:src="@mipmap/camara2"
+                android:contentDescription="@string/img_desc" />
         </LinearLayout>
 
         <EditText
@@ -61,7 +64,7 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:ems="10"
-            android:hint="Nombre"
+            android:hint="@string/nombre"
             android:inputType="text" />
 
         <EditText
@@ -69,7 +72,7 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:ems="10"
-            android:hint="Apellido"
+            android:hint="@string/apellido"
             android:inputType="text" />
 
         <EditText
@@ -77,7 +80,7 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:ems="10"
-            android:hint="Email"
+            android:hint="@string/email"
             android:inputType="textEmailAddress" />
 
         <EditText
@@ -85,7 +88,7 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:ems="10"
-            android:hint="Contraseña"
+            android:hint="@string/contrase_a"
             android:inputType="textPassword" />
 
         <EditText
@@ -93,7 +96,7 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:ems="10"
-            android:hint="Celular"
+            android:hint="@string/celular"
             android:inputType="phone" />
 
         <EditText
@@ -101,7 +104,7 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:ems="10"
-            android:hint="Nro. Identificación"
+            android:hint="@string/nro_identificaci_n"
             android:inputType="number" />
 
         <LinearLayout
@@ -115,7 +118,7 @@
                 android:layout_height="50dp"
                 android:layout_weight="2"
                 android:ems="10"
-                android:hint="Latitud"
+                android:hint="@string/latitud"
                 android:inputType="phone"
                 android:textSize="14sp" />
 
@@ -129,7 +132,7 @@
                 android:layout_height="50dp"
                 android:layout_weight="2"
                 android:ems="10"
-                android:hint="Longitud"
+                android:hint="@string/longitud"
                 android:inputType="phone"
                 android:textSize="14sp" />
         </LinearLayout>
@@ -143,7 +146,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/purple"
-            android:text="Signup" />
+            android:text="@string/signup" />
 
     </LinearLayout>
 

@@ -3,4 +3,20 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_maps">MapsActivity</string>
+    <string name="login_btn_msg">Acceder</string>
+    <string name="signin_btn_msg">Registrar</string>
+    <string name="img_desc">TODO</string>
+    <string name="nombre">Nombre</string>
+    <string name="apellido">apellido</string>
+    <string name="celular">celular</string>
+    <string name="nro_identificaci_n">Nro. identificación</string>
+    <string name="actualizar_info">actualizar info</string>
+    <string name="usuarios_disponibles">Usuarios Disponibles</string>
+    <string name="hola">Hola</string>
+    <string name="email">Email</string>
+    <string name="contrase_a">Contraseña</string>
+    <string name="login">Login</string>
+    <string name="latitud">Latitud</string>
+    <string name="longitud">Longitud</string>
+    <string name="signup">Signup</string>
 </resources>

@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="2"
             android:backgroundTint="@color/purple"
-            android:text="Acceder" />
+            android:text="@string/login_btn_msg" />
 
         <Button
             android:id="@+id/SingUp_btn"
@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="2"
             android:backgroundTint="@color/gray"
-            android:text="Registrar" />
+            android:text="@string/signin_btn_msg" />
 
     </LinearLayout>
 

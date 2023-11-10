@@ -17,7 +17,7 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="30dp"
-        android:text="Hola"
+        android:text="@string/hola"
         map:layout_constraintBottom_toBottomOf="parent"
         map:layout_constraintEnd_toEndOf="parent"
         map:layout_constraintStart_toStartOf="parent"

@@ -25,7 +25,8 @@
                 android:id="@+id/ProfilePhoto"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
-                android:src="@color/material_dynamic_neutral95" />
+                android:src="@color/material_dynamic_neutral95"
+                android:contentDescription="@string/img_desc" />
 
         </androidx.cardview.widget.CardView>
 
@@ -33,41 +34,41 @@
             android:layout_width="match_parent"
             android:layout_height="10dp" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
         <EditText
             android:id="@+id/Name"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:ems="10"
-            android:hint="Nombre"
-            android:inputType="text" />
+            android:hint="@string/nombre"
+            android:inputType="text"
+            android:autofillHints="" />
 
         <EditText
             android:id="@+id/LastName"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:ems="10"
-            android:hint="Apellido"
-            android:inputType="text" />
+            android:hint="@string/apellido"
+            android:inputType="text"
+            android:autofillHints="" />
 
         <EditText
             android:id="@+id/Phone"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:ems="10"
-            android:hint="Celular"
-            android:inputType="phone" />
+            android:hint="@string/celular"
+            android:inputType="phone"
+            android:autofillHints="" />
 
         <EditText
             android:id="@+id/Identification"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:ems="10"
-            android:hint="Nro. Identificación"
-            android:inputType="number" />
+            android:hint="@string/nro_identificaci_n"
+            android:inputType="number"
+            android:autofillHints="" />
 
         <Space
             android:layout_width="match_parent"
@@ -78,7 +79,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/purple"
-            android:text="Actualizar info" />
+            android:text="@string/actualizar_info" />
 
     </LinearLayout>
 
@@ -93,5 +94,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.976"
-        app:srcCompat="@drawable/ic_go_back" />
+        app:srcCompat="@drawable/ic_go_back"
+        android:contentDescription="@string/img_desc" />
 </androidx.constraintlayout.widget.ConstraintLayout>
