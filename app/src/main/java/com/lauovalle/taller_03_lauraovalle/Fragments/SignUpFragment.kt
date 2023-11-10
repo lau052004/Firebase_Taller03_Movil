@@ -199,7 +199,7 @@ class SignUpFragment : Fragment() {
         user.latitud = binding.latitud.text.toString().toDouble()
         user.longitud = binding.longitud.text.toString().toDouble()
 
-        dbRef.child(userId).setValue(user).addOnCompleteListener{
+        dbRef.child(userId).setValue(user).addOnCompleteListener {
             guardarImagen(userId, onSuccessListener)
         }.addOnFailureListener {err ->
             Toast.makeText(requireContext(),"Error: ${err.message}", Toast.LENGTH_LONG).show()
