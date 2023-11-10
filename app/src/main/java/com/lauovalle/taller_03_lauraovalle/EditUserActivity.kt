@@ -2,6 +2,7 @@ package com.lauovalle.taller_03_lauraovalle
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.bumptech.glide.Glide
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.google.firebase.database.DataSnapshot
@@ -49,7 +50,7 @@ class EditUserActivity : AppCompatActivity() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val user = snapshot.getValue(User::class.java)
                 storageRef.downloadUrl.addOnSuccessListener { uri ->
-                    binding.ProfilePhoto.setImageURI(uri)
+                    Glide.with(this@EditUserActivity).load(uri.toString()).into(binding.ProfilePhoto)
                 }
             }
 

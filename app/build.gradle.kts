@@ -73,4 +73,9 @@ dependencies {
     // Location
     implementation("com.google.android.gms:play-services-maps:18.1.0")
     implementation ("com.google.android.gms:play-services-location:21.0.1")
+
+    // Display de imagenes
+    implementation ("com.github.bumptech.glide:glide:4.12.0")
+    // Glide v4 uses this new annotation processor -- see https://bumptech.github.io/glide/doc/generatedapi.html
+    annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0")
 }

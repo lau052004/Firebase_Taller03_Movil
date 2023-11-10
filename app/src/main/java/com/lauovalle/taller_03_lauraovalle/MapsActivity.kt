@@ -105,24 +105,23 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun obtenerUbicacion(key: String?){
         dbRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                Toast.makeText(this@MapsActivity, "datos an cambiado", Toast.LENGTH_SHORT).show()
                 for (userSnapshot in dataSnapshot.children) {
                     val usuario = userSnapshot.getValue(User::class.java)
                     // Guardar latitud y longitud del otroUsuario
                     if (usuario != null && usuario.correo == key) {
                         val latitud = usuario.latitud
                         val longitud = usuario.longitud
-                        latLngActual = LatLng(latitud.toDouble(), longitud.toDouble())
+                        latLngActual = LatLng(latitud, longitud)
                         //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLngActual, 15f))
                         if (otherLocationMarker == null) {
-                            otherLocationMarker =  mMap.addMarker(
+                            otherLocationMarker = mMap.addMarker(
                                 MarkerOptions().position(latLngActual)
                                     .title("posición otro")
                                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
                             )
                         } else {
                             // Actualiza la posición del marcador existente
-                            userLocationMarker?.position = latLngActual
+                            otherLocationMarker?.position = latLngActual
                         }
                     }
                 }
@@ -198,10 +197,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                                     .title("Marker in my actual position ${location.latitude} ${location.longitude}")
                                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
                             )
-                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f))
+                            mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng))
                         } else {
                             // Actualiza la posición del marcador existente
                             userLocationMarker?.position = latLng
+                            mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng))
                         }
                     }
                 }
