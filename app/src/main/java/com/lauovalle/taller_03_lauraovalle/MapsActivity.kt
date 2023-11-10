@@ -149,7 +149,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             }
         }
     }
-
+//comment
     @SuppressLint("MissingPermission")
     fun updateUI(permission: Boolean) {
         if (permission) {
