@@ -24,9 +24,6 @@ class AuthActivity : AppCompatActivity() {
         val view: View = binding.root
         setContentView(view)
 
-        val intent:Intent = Intent(this, HomeActivity::class.java)
-        startActivity(intent)
-
         setup()
     }
 

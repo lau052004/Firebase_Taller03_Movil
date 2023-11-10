@@ -144,7 +144,7 @@ class SignUpFragment : Fragment() {
     }
 
     private fun setup() {
-        binding.SignUpBtn.setOnClickListener{
+        binding.SignupBtn.setOnClickListener{
             if(binding.EmailAddress.text.isNotEmpty() && binding.Password.text.isNotEmpty()) {
                 createUser()
             } else {

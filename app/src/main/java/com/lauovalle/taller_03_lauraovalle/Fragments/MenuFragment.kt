@@ -16,6 +16,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.ktx.Firebase
+import com.lauovalle.taller_03_lauraovalle.AuthActivity
 import com.lauovalle.taller_03_lauraovalle.EditUserActivity
 import com.lauovalle.taller_03_lauraovalle.HomeActivity
 import com.lauovalle.taller_03_lauraovalle.R
@@ -74,7 +75,7 @@ class MenuFragment : Fragment() {
                 }
                 R.id.item_logout -> {
                     FirebaseAuth.getInstance().signOut()
-                    val intent = Intent(requireContext(), HomeActivity::class.java)
+                    val intent = Intent(requireContext(), AuthActivity::class.java)
                     startActivity(intent)
                     requireActivity().finish()
                     true
