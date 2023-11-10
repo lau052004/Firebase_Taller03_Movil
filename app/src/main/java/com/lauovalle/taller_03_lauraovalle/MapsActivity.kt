@@ -188,6 +188,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                     locationResult.locations.forEach { location ->
                         // Obtén la nueva ubicación
                         val latLng = LatLng(location.latitude, location.longitude)
+                        dbRef.child(mAuth.currentUser?.uid.toString()).child("latitud").setValue(location.latitude)
+                        dbRef.child(mAuth.currentUser?.uid.toString()).child("longitud").setValue(location.longitude)
                         if (userLocationMarker == null) {
                             userLocationMarker = mMap.addMarker(
                                 MarkerOptions().position(latLng)
