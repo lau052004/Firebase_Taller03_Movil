@@ -11,7 +11,10 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.LocationSettingsRequest
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -19,6 +22,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.PolylineOptions
 import com.google.android.material.snackbar.Snackbar
@@ -47,6 +51,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var mAuth: FirebaseAuth
     private lateinit var latLngActual: LatLng
     private lateinit var latLngOtro: LatLng
+    private var userLocationMarker: Marker? = null
 
     private val logger = Logger.getLogger(TAG)
 
@@ -112,7 +117,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                         mMap.addMarker(
                             MarkerOptions().position(latLngActual)
                                 .title("posición otro")
-                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
+                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
                         )
                         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLngActual, 15f))
                     }
@@ -164,13 +169,58 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
                 if (location != null) {
                     val ubicacion = LatLng(location.latitude, location.longitude)
-                    mMap.addMarker(
-                        MarkerOptions().position(ubicacion)
-                            .title("Marker in my actual position ${location.latitude} ${location.longitude}")
-                    )
-                    mMap.moveCamera(CameraUpdateFactory.newLatLng(ubicacion))
+                    if (userLocationMarker == null) {
+                        userLocationMarker = mMap.addMarker(
+                            MarkerOptions().position(ubicacion)
+                                .title("Marker in my actual position ${location.latitude} ${location.longitude}")
+                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
+                        )
+                        mMap.moveCamera(CameraUpdateFactory.newLatLng(ubicacion))
+                    } else {
+                        // Actualiza la posición del marcador existente
+                        userLocationMarker?.position = ubicacion
+                    }
                 }
             }
+
+            locationCallback = object : LocationCallback() {
+                override fun onLocationResult(locationResult: LocationResult) {
+                    locationResult.locations.forEach { location ->
+                        // Obtén la nueva ubicación
+                        val latLng = LatLng(location.latitude, location.longitude)
+                        if (userLocationMarker == null) {
+                            userLocationMarker = mMap.addMarker(
+                                MarkerOptions().position(latLng)
+                                    .title("Marker in my actual position ${location.latitude} ${location.longitude}")
+                                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
+                            )
+                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f))
+                        } else {
+                            // Actualiza la posición del marcador existente
+                            userLocationMarker?.position = latLng
+                        }
+                    }
+                }
+            }
+
+            val locationRequest = LocationRequest.create().apply {
+                interval = 10000 // Intervalo de actualización de ubicación en milisegundos
+                fastestInterval = 5000
+                priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+            }
+
+            val builder = LocationSettingsRequest.Builder()
+                .addLocationRequest(locationRequest)
+
+            // Verifica la configuración de ubicación
+            val client = LocationServices.getSettingsClient(this)
+            val task = client.checkLocationSettings(builder.build())
+
+            task.addOnSuccessListener {
+                // Configuración de ubicación aceptada, comienza la actualización
+                fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null)
+            }
+
         } else {
             logger.warning("Permission denied")
         }
