@@ -294,7 +294,7 @@ class SignUpFragment : Fragment() {
         // Continua si el archivo ha sido creado exitosamente
         if (imageFile != null) {
             // Guardar un archivo: Ruta para usar con ACTION_VIEW intents
-            pictureImagePath = FileProvider.getUriForFile(requireContext(),"com.example.android.fileprovider", imageFile)
+            pictureImagePath = FileProvider.getUriForFile(requireContext(),"com.taller3.fileprovider", imageFile)
             logger.info("Ruta: $pictureImagePath")
             takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, pictureImagePath)
             try {

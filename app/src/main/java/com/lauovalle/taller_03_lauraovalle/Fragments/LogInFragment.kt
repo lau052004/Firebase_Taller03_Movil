@@ -37,7 +37,7 @@ class LogInFragment : Fragment() {
 
         binding.LogInBtn.setOnClickListener {
             if(binding.EmailAddress.text.isNotEmpty() && binding.Password.text.isNotEmpty()) {
-                mAuth.signInWithEmailAndPassword(binding.EmailAddress.text.toString(),binding.Password.text.toString()).addOnCompleteListener{
+                mAuth.signInWithEmailAndPassword(binding.EmailAddress.text.toString(), binding.Password.text.toString()).addOnCompleteListener{
                     if(it.isSuccessful) {
                         val homeIntent = Intent(requireContext(), HomeActivity::class.java)
                         homeIntent.putExtra("email", binding.EmailAddress.text.toString())

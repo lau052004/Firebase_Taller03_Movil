@@ -2,6 +2,7 @@ package com.lauovalle.taller_03_lauraovalle
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
@@ -73,6 +74,7 @@ class EditUserActivity : AppCompatActivity() {
             if (binding.Phone.text.isNotEmpty()) {
                 dbRef.child("phone").setValue(binding.Phone.text.toString())
             }
+            Toast.makeText(this, "Datos actualizados", Toast.LENGTH_SHORT).show()
         }
     }
 }
