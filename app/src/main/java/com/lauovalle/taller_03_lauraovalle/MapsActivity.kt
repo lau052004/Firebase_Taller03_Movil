@@ -24,7 +24,6 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.gms.maps.model.PolylineOptions
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -52,7 +51,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var latLngActual: LatLng
     private lateinit var latLngOtro: LatLng
     private var userLocationMarker: Marker? = null
-
+    private var otherLocationMarker: Marker? = null
     private val logger = Logger.getLogger(TAG)
 
     // Permission handler
@@ -99,11 +98,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mMap.uiSettings.isMapToolbarEnabled = true
 
         verifyPermissions(this, android.Manifest.permission.ACCESS_FINE_LOCATION, "El permiso es requerido para poder mostrar tu ubicación en el mapa")
-        obtenerUbicacion(mAuth.currentUser?.uid,key)
+        obtenerUbicacion(key)
 
     }
 
-    fun obtenerUbicacion(usuarioActual: String?, key: String?){
+    private fun obtenerUbicacion(key: String?){
         dbRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 Toast.makeText(this@MapsActivity, "datos an cambiado", Toast.LENGTH_SHORT).show()
@@ -114,12 +113,17 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                         val latitud = usuario.latitud
                         val longitud = usuario.longitud
                         latLngActual = LatLng(latitud.toDouble(), longitud.toDouble())
-                        mMap.addMarker(
-                            MarkerOptions().position(latLngActual)
-                                .title("posición otro")
-                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
-                        )
-                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLngActual, 15f))
+                        //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLngActual, 15f))
+                        if (otherLocationMarker == null) {
+                            otherLocationMarker =  mMap.addMarker(
+                                MarkerOptions().position(latLngActual)
+                                    .title("posición otro")
+                                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
+                            )
+                        } else {
+                            // Actualiza la posición del marcador existente
+                            userLocationMarker?.position = latLngActual
+                        }
                     }
                 }
             }
@@ -161,10 +165,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             // granted
             logger.info("Permission granted")
 
-            var fusedLocationClient: FusedLocationProviderClient
-            var locationCallback: LocationCallback
-            var polylineOptions = PolylineOptions()
-            fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+            val locationCallback: LocationCallback
+            val fusedLocationClient: FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
 
             fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
                 if (location != null) {
