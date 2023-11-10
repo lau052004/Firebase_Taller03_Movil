@@ -6,4 +6,109 @@
     android:layout_height="match_parent"
     tools:context=".EditUserActivity">
 
+    <LinearLayout
+        android:layout_width="317dp"
+        android:layout_height="473dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_gravity="center"
+            app:cardCornerRadius="999dp">
+
+            <ImageView
+                android:id="@+id/ProfilePhoto"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:src="@color/material_dynamic_neutral95" />
+
+        </androidx.cardview.widget.CardView>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="10dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageButton
+                android:id="@+id/gallery_btn"
+                android:layout_width="60dp"
+                android:layout_height="50dp"
+                android:layout_weight="50"
+                android:scaleType="centerInside"
+                android:src="@mipmap/galeria" />
+
+            <ImageButton
+                android:id="@+id/camera_btn"
+                android:layout_width="60dp"
+                android:layout_height="50dp"
+                android:layout_weight="50"
+                android:scaleType="centerInside"
+                android:src="@mipmap/camara2" />
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/Name"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:ems="10"
+            android:hint="Nombre"
+            android:inputType="text" />
+
+        <EditText
+            android:id="@+id/LastName"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:ems="10"
+            android:hint="Apellido"
+            android:inputType="text" />
+
+        <EditText
+            android:id="@+id/Phone"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:ems="10"
+            android:hint="Celular"
+            android:inputType="phone" />
+
+        <EditText
+            android:id="@+id/Identification"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:ems="10"
+            android:hint="Nro. Identificación"
+            android:inputType="number" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="10dp" />
+
+        <Button
+            android:id="@+id/SignUpBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/purple"
+            android:text="Signup" />
+
+    </LinearLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floatingActionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.954"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.976"
+        app:srcCompat="@drawable/ic_go_back" />
 </androidx.constraintlayout.widget.ConstraintLayout>

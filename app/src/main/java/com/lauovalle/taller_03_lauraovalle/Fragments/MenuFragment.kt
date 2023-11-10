@@ -74,6 +74,8 @@ class MenuFragment : Fragment() {
                 }
                 R.id.item_logout -> {
                     FirebaseAuth.getInstance().signOut()
+                    val intent = Intent(requireContext(), HomeActivity::class.java)
+                    startActivity(intent)
                     requireActivity().finish()
                     true
                 }
