@@ -47,14 +47,15 @@ class HomeActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         if (mAuth.currentUser == null) {
+            intent = Intent(this, AuthActivity::class.java)
             finish()
+            startActivity(intent)
         }
-        val usuarioActual = mAuth.currentUser?.uid
 
-        crearLista(usuarioActual)
+        crearLista()
     }
 
-    private fun crearLista(usuarioActual: String?) {
+    private fun crearLista() {
         dbRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 usuariosActivos.clear()

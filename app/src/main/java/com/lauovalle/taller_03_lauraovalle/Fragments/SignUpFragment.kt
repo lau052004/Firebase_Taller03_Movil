@@ -192,6 +192,7 @@ class SignUpFragment : Fragment() {
         val userId = mAuth.currentUser?.uid.toString()
         user.key = userId
         user.nombre = binding.Name.text.toString()
+        user.correo = binding.EmailAddress.text.toString()
         user.apellido = binding.LastName.text.toString()
         user.phone = binding.Phone.text.toString()
         user.nroId = binding.Identification.text.toString()
